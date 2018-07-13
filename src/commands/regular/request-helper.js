@@ -6,6 +6,7 @@ class RequestHelperCommand extends Command {
   constructor () {
     super('request-helper', {
       aliases: ['rhelper'],
+      category: 'regular',
       args: [
         {
           id: 'helperRole',
@@ -16,7 +17,12 @@ class RequestHelperCommand extends Command {
         }
       ],
       clientPermissions: ['MANAGE_ROLES'],
-      channelRestriction: 'guild'
+      channelRestriction: 'guild',
+      description: {
+        content: 'Requests a helper. Can only be used once an hour.',
+        usage: '<helper role alias>',
+        examples: ['csa', 'calc bc']
+      }
     })
   }
 

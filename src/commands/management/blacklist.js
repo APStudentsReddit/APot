@@ -5,6 +5,7 @@ class BlackListCommand extends Command {
   constructor () {
     super('blacklist', {
       aliases: ['bean'],
+      category: 'management',
       args: [
         {
           id: 'member',
@@ -15,7 +16,12 @@ class BlackListCommand extends Command {
         }
       ],
       userPermissions: ['MANAGE_ROLES'],
-      channelRestriction: 'guild'
+      channelRestriction: 'guild',
+      description: {
+        content: 'Blacklists someone from using all commands.',
+        usage: '<user>',
+        examples: ['naughtyboy#1234']
+      }
     })
   }
 

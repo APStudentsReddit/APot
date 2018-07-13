@@ -5,6 +5,7 @@ class AddRoleAlias extends Command {
   constructor () {
     super('delete-role-alias', {
       aliases: ['del-role-alias', 'rm-role-alias', 'deleterolealias', 'deletera', 'rmra', 'delete-alias', 'rm-alias'],
+      category: 'management',
       args: [
         {
           id: 'helperRole',
@@ -22,7 +23,11 @@ class AddRoleAlias extends Command {
         }
       ],
       userPermissions: ['MANAGE_ROLES'],
-      channelRestriction: 'guild'
+      channelRestriction: 'guild',
+      description: {
+        content: 'Deletes a helper role alias',
+        usage: '<helper role> <alias>'
+      }
     })
   }
 

@@ -5,6 +5,7 @@ class AddRoleAlias extends Command {
   constructor () {
     super('create-role-alias', {
       aliases: ['add-role-alias', 'set-role-alias', 'addrolealias', 'addra', 'createra', 'add-alias'],
+      category: 'management',
       args: [
         {
           id: 'helperRole',
@@ -22,7 +23,11 @@ class AddRoleAlias extends Command {
         }
       ],
       userPermissions: ['MANAGE_ROLES'],
-      channelRestriction: 'guild'
+      channelRestriction: 'guild',
+      description: {
+        content: 'Adds a helper role alias',
+        usage: '<helper role> <alias>'
+      }
     })
   }
 

@@ -5,6 +5,7 @@ class AddRoleAlias extends Command {
   constructor () {
     super('role-aliases', {
       aliases: ['ls-role-alias', 'ls'],
+      category: 'regular',
       args: [
         {
           id: 'role',
@@ -14,7 +15,12 @@ class AddRoleAlias extends Command {
           }
         }
       ],
-      channelRestriction: 'guild'
+      channelRestriction: 'guild',
+      description: {
+        content: 'Lists role aliases for helper pings.',
+        usage: '<role>',
+        examples: ['Computer Science Helper']
+      }
     })
   }
 
