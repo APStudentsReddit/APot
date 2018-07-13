@@ -10,6 +10,9 @@ class BlacklistInhibitor extends Inhibitor {
   }
 
   async exec (message) {
+    // Don't apply to DMs
+    if (message.channel.type !== 'channel') return
+
     // Get the current guild's blacklisted memebers from the Redis database
     var blacklist = await redis.db.hgetAsync(message.guild.id, 'blacklist') || '[]'
 
