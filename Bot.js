@@ -4,7 +4,7 @@ const client = new AkairoClient({
   ownerID: '88410718314971136',
   prefix: '>',
   commandDirectory: './src/commands/',
-  inhibitorDirectory: './src/inhibitors/',
+  inhibitorDirectory: './src/inhibitors/'
 })
 
 client.login(process.env.TOKEN).then(() => {

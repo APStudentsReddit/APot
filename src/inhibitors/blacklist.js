@@ -24,6 +24,7 @@ class BlacklistInhibitor extends Inhibitor {
     if (blacklist.includes(message.member.id)) {
       console.log(message.member.id, ' has been beaned')
       message.author.send('You have been blacklisted from using me.')
+      // eslint-disable-next-line no-throw-literal
       throw undefined
     }
   }
