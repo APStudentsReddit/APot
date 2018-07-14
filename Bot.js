@@ -5,7 +5,6 @@ const client = new AkairoClient({
   prefix: '>',
   commandDirectory: './src/commands/',
   inhibitorDirectory: './src/inhibitors/',
-  listenerDirectory: './src/listeners/'
 })
 
 client.login(process.env.TOKEN).then(() => {
