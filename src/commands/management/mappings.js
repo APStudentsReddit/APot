@@ -29,11 +29,10 @@ class MappingsCommand extends Command {
     }
 
     const embed = await this.client.util.embed()
-    .addField('Blacklist', blacklist.length > 0 ? blacklist.map((id) => `<@${id}>`) : 'none')
-    .addField('Aliases', aliases.length > 0 ? aliases.join('\n') : 'none')
-    .setFooter(`requested by ${message.author.username}`, message.author.displayAvatarURL)
+      .addField('Blacklist', blacklist.length > 0 ? blacklist.map((id) => `<@${id}>`) : 'none')
+      .addField('Aliases', aliases.length > 0 ? aliases.join('\n') : 'none')
+      .setFooter(`requested by ${message.author.username}`, message.author.displayAvatarURL)
     await status.edit({ embed })
-
   }
 }
 
