@@ -4,7 +4,7 @@ const redis = require('../../structures/database.js')
 class AddRoleAlias extends Command {
   constructor () {
     super('delete-role-alias', {
-      aliases: ['del-role-alias', 'rm-role-alias', 'deleterolealias', 'deletera', 'rmra', 'delete-alias', 'rm-alias'],
+      aliases: ['delete-role-alias', 'del-role-alias', 'rm-role-alias', 'deleterolealias', 'deletera', 'rmra', 'delete-alias', 'rm-alias'],
       category: 'management',
       split: 'sticky',
       args: [

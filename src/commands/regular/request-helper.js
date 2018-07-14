@@ -5,7 +5,7 @@ const moment = require('moment')
 class RequestHelperCommand extends Command {
   constructor () {
     super('request-helper', {
-      aliases: ['rhelper'],
+      aliases: ['helper', 'request-helper', 'rhelper'],
       category: 'regular',
       args: [
         {

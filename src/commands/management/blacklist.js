@@ -4,7 +4,7 @@ const redis = require('../../structures/database.js')
 class BlackListCommand extends Command {
   constructor () {
     super('blacklist', {
-      aliases: ['bean'],
+      aliases: ['blacklist', 'bean'],
       category: 'management',
       args: [
         {

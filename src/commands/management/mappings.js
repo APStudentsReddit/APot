@@ -4,7 +4,7 @@ const redis = require('../../structures/database.js')
 class MappingsCommand extends Command {
   constructor () {
     super('map', {
-      aliases: ['m', 'mappings'],
+      aliases: ['mappings', 'm'],
       category: 'management',
       args: [],
       userPermissions: ['MANAGE_ROLES'],
