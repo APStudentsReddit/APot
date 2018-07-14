@@ -40,7 +40,7 @@ class AddRoleAlias extends Command {
     const rolesFound = await message.guild.roles.filter(a => a.name.toLowerCase().includes(args.helperRole.toLowerCase()))
 
     // Mke sure we do find a role
-    if (rolesFound.size === 0) return message.reply(`${message.author}, found no roles matching that name. Try again`)
+    if (rolesFound.size === 0) return message.reply(`found no roles matching that name. Try again`)
 
     // Make sure there is only 1 role matching the given role name
     if (rolesFound.size > 1) return message.reply('Found too many roles matching that name. Please try again with a more specific role name.')
