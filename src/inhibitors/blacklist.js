@@ -22,7 +22,6 @@ class BlacklistInhibitor extends Inhibitor {
 
     // Check if the member is blacklisted, if they are, tell them they were blacklisted in DMs and abort the command
     if (blacklist.includes(message.member.id)) {
-      console.log(message.member.id, ' has been beaned')
       message.author.send('You have been blacklisted from using me.')
       // eslint-disable-next-line no-throw-literal
       throw undefined
