@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo')
 const redis = require('../../structures/database.js')
 const moment = require('moment')
+const Discord = require('discord.js')
 
 class RequestHelperCommand extends Command {
   constructor () {
@@ -44,19 +45,29 @@ class RequestHelperCommand extends Command {
       // Send a status message
       const status = await message.reply(`Attempting to ping ${role.name}s!`)
 
-      // Make sure it is a helper role
-      if (!role.name.includes('Helper')) return message.reply('That is not a valid helper role.')
+      const prompt = await message.channel.send(`You are about to ping all ${role.name}s on this server. You will not be able to ping for another hour after confirming your helper request. Please make sure you have clearly elaborated your question and/or shown all work. If you have done so, type Y. To cancel, type N.`)
+      const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, {time: 10000})
+      collector.on('collect', async (m) => {
+        if (m.content.toLowerCase() === 'y') {
+          // Make sure it is a helper role
+          if (!role.name.includes('Helper')) return message.reply('That is not a valid helper role.')
 
-      // Make the role mentionable, mention the helpers, and then make the role unmentionable
-      await role.setMentionable(true, `Requested by: ${message.author.username} (${message.author.id})`)
-      await message.channel.send(`${message.author} has requested a ${role.toString()}`)
-      await role.setMentionable(false, `Requested by: ${message.author.username} (${message.author.id})`)
+          // Make the role mentionable, mention the helpers, and then make the role unmentionable
+          await role.setMentionable(true, `Requested by: ${message.author.username} (${message.author.id})`)
+          await message.channel.send(`${message.author} has requested a ${role.toString()}`)
+          await role.setMentionable(false, `Requested by: ${message.author.username} (${message.author.id})`)
 
-      // Delete the status message
-      await status.delete()
+          // Delete the status message
+          await status.delete()
+          await prompt.delete()
+          await m.delete()
 
-      // Mark the current time in milliseconds as the last time this person pinged a helper
-      await redis.db.hsetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing', Date.now())
+          // Mark the current time in milliseconds as the last time this person pinged a helper
+          await redis.db.hsetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing', Date.now())
+        } else {
+          m.channel.send('Helper request aborted.').then((m) => m.delete(5000))
+        }
+      })
     } else {
       return message.reply('That\'s not a valid alias for pinging a helper role. Please try again.')
     }
