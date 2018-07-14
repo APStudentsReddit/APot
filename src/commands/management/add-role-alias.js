@@ -13,7 +13,7 @@ class AddRoleAlias extends Command {
           prompt: {
             start: 'Which helper role would you like to add an alias for?'
           },
-          prefix: '--role=',
+          prefix: ['--role=', '--r', '-r='],
           match: 'prefix'
 
         },
@@ -22,7 +22,7 @@ class AddRoleAlias extends Command {
           prompt: {
             start: 'What alias would you like to add?'
           },
-          prefix: '--alias=',
+          prefix: ['--alias=', '--a=', '-a='],
           match: 'prefix'
         }
       ],
