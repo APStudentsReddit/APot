@@ -9,9 +9,10 @@ class BlacklistInhibitor extends Inhibitor {
     })
   }
 
-  async exec (message) {
+  async exec (message, command) {
     // Don't apply to DMs
-    if (message.channel.type !== 'channel') return
+    if (!message.guild) return true
+    if (command.id === 'help') return false
 
     // Get the current guild's blacklisted memebers from the Redis database
     var blacklist = await redis.db.hgetAsync(message.guild.id, 'blacklist') || '[]'
@@ -21,8 +22,9 @@ class BlacklistInhibitor extends Inhibitor {
 
     // Check if the member is blacklisted, if they are, tell them they were blacklisted in DMs and abort the command
     if (blacklist.includes(message.member.id)) {
-      message.author.send('You were blacklisted so you can\'t use that command anymore')
-      return false
+      console.log(message.member.id, ' has been beaned')
+      message.author.send('You have been blacklisted from using me.')
+      throw undefined
     }
   }
 }
