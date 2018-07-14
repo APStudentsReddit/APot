@@ -63,7 +63,7 @@ class AddRoleAlias extends Command {
       // Add the alias to the list of aliases available to that role and add it to the mappings
       roleAliases.push(args.alias.toLowerCase())
       await redis.db.hsetAsync(role.id, 'aliases', JSON.stringify(roleAliases))
-      await redis.db.hsetAsync(`${message.guild.id}.aliasMappings`, args.alias.toLowerCase(), role.id).then(console.log)
+      await redis.db.hsetAsync(`${message.guild.id}.aliasMappings`, args.alias.toLowerCase(), role.id)
 
       // Tell the user that the role is now an alias
       status.edit(`${message.author.toString()}, ${args.alias} is now a valid alias of ${role}`)
