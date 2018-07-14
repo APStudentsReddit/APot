@@ -6,27 +6,31 @@ class AddRoleAlias extends Command {
     super('create-role-alias', {
       aliases: ['add-role-alias', 'set-role-alias', 'addrolealias', 'addra', 'createra', 'add-alias'],
       category: 'management',
+      split: 'sticky',
       args: [
         {
           id: 'helperRole',
-          type: 'roles',
           prompt: {
             start: 'Which helper role would you like to add an alias for?'
-          }
+          },
+          prefix: '--role=',
+          match: 'prefix'
+
         },
         {
           id: 'alias',
-          type: 'string',
           prompt: {
             start: 'What alias would you like to add?'
-          }
+          },
+          prefix: '--alias=',
+          match: 'prefix'
         }
       ],
       userPermissions: ['MANAGE_ROLES'],
       channelRestriction: 'guild',
       description: {
         content: 'Adds a helper role alias',
-        usage: '<helper role> <alias>'
+        usage: '--role="<helper role>" --alias="<alias>"'
       }
     })
   }

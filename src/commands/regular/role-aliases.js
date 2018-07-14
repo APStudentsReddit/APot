@@ -6,13 +6,15 @@ class AddRoleAlias extends Command {
     super('role-aliases', {
       aliases: ['ls-role-alias', 'ls'],
       category: 'regular',
+      quoted: true,
       args: [
         {
           id: 'role',
-          type: 'roles',
+          type: 'string',
           prompt: {
             start: 'Which helper role would you like to list aliases for?'
-          }
+          },
+          match: 'content'
         }
       ],
       channelRestriction: 'guild',

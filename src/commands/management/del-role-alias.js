@@ -6,27 +6,30 @@ class AddRoleAlias extends Command {
     super('delete-role-alias', {
       aliases: ['del-role-alias', 'rm-role-alias', 'deleterolealias', 'deletera', 'rmra', 'delete-alias', 'rm-alias'],
       category: 'management',
+      split: 'sticky',
       args: [
         {
           id: 'helperRole',
-          type: 'roles',
           prompt: {
             start: 'Which helper role would you like to remove an alias from?'
-          }
+          },
+          prefix: '--role=',
+          match: 'prefix'
         },
         {
           id: 'alias',
-          type: 'string',
           prompt: {
-            start: 'What alias would you like to delete?'
-          }
+            start: 'Which alias would you like to remove?'
+          },
+          prefix: '--alias=',
+          match: 'prefix'
         }
       ],
       userPermissions: ['MANAGE_ROLES'],
       channelRestriction: 'guild',
       description: {
         content: 'Deletes a helper role alias',
-        usage: '<helper role> <alias>'
+        usage: '--role="<helper role>" --alias="<alias>"'
       }
     })
   }
