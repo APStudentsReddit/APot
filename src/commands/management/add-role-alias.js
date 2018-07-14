@@ -36,11 +36,17 @@ class AddRoleAlias extends Command {
   }
 
   async exec (message, args) {
+    // Find all roles with matching the role name given
+    const rolesFound = await message.guild.roles.filter(a => a.name.toLowerCase().includes(args.helperRole.toLowerCase()))
+
+    // Mke sure we do find a role
+    if (rolesFound.size === 0) return message.reply(`${message.author}, found no roles matching that name. Try again`)
+
     // Make sure there is only 1 role matching the given role name
-    if (args.helperRole.size > 1) return message.reply('Found too many roles matching that name. Please try again with a more specific role name.')
+    if (rolesFound.size > 1) return message.reply('Found too many roles matching that name. Please try again with a more specific role name.')
 
     // Assume the role wanted is the first and only one in the Collection
-    const role = args.helperRole.first()
+    const role = rolesFound.first()
 
     // Make sure it is a helper role
     if (role.name.includes('Helper')) {
@@ -52,12 +58,12 @@ class AddRoleAlias extends Command {
       roleAliases = JSON.parse(roleAliases)
 
       // Check if this alias already exists
-      if (roleAliases.indexOf(args.alias) > -1) return message.reply(`That alias already exists for ${role.toString()}`)
+      if (roleAliases.indexOf(args.alias.toLowerCase()) !== -1) return status.edit(`${message.author}, That alias already exists for ${role.toString()}`)
 
       // Add the alias to the list of aliases available to that role and add it to the mappings
       roleAliases.push(args.alias.toLowerCase())
       await redis.db.hsetAsync(role.id, 'aliases', JSON.stringify(roleAliases))
-      await redis.db.hsetAsync('aliasMappings', args.alias, role.id)
+      await redis.db.hsetAsync(`${message.guild.id}.aliasMappings`, args.alias.toLowerCase(), role.id).then(console.log)
 
       // Tell the user that the role is now an alias
       status.edit(`${message.author.toString()}, ${args.alias} is now a valid alias of ${role}`)

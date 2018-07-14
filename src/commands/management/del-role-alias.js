@@ -35,11 +35,17 @@ class AddRoleAlias extends Command {
   }
 
   async exec (message, args) {
+    // Find all roles with matching the role name given
+    const rolesFound = await message.guild.roles.filter(a => a.name.toLowerCase().includes(args.helperRole.toLowerCase()))
+
+    // Mke sure we do find a role
+    if (rolesFound.size === 0) return message.reply(`found no roles matching that name. Try again`)
+
     // Make sure there is only 1 role matching the given role name
-    if (args.helperRole.size > 1) return message.reply('Found too many roles matching that name. Please try again with a more specific role name.')
+    if (rolesFound.size > 1) return message.reply('Found too many roles matching that name. Please try again with a more specific role name.')
 
     // Assume the role wanted is the first and only one in the Collection
-    const role = args.helperRole.first()
+    const role = rolesFound.first()
 
     // Make sure it is a helper role
     if (role.name.includes('Helper')) {
@@ -55,7 +61,7 @@ class AddRoleAlias extends Command {
 
       // Update the database with the cleaned array and remove it from mappings
       await redis.db.hsetAsync(role.id, 'aliases', JSON.stringify(newAliasArray))
-      await redis.db.hdelAsync('aliasMappings', args.alias)
+      await redis.db.hdelAsync(`${message.guild.id}.aliasMappings`, args.alias)
 
       // Tell the user that the role is not an alias anymore
       status.edit(`${message.author.toString()}, ${args.alias} is no longer a valid alias of ${role}`)
