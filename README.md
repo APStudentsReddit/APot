@@ -3,7 +3,7 @@ No, it's not a pot. It's APot. A Discord bot custom made for the AP Students Dis
 
 ## Prerequisites
 * [Node.js](https://nodejs.org/en/download/current/)
-* [Redis](https://redis.io/topics/quickstart)
+* [SQLite Browser](https://sqlitebrowser.org/) (optional [so you can see your data])
 * [yarn](https://yarnpkg.com/en/docs/install)
 
 ## Installation
