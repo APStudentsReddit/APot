@@ -24,7 +24,7 @@ class PrefixCommand extends Command {
     }
 
     // Make sure member is a server admin
-    if (!message.member.permissions.has('MANAGE_SERVER')) return message.reply("You are not authorized to change this server's prefix.")
+    if (!message.member.permissions.has('MANAGE_GUILD')) return message.reply("You are not authorized to change this server's prefix.")
 
     // Otherwise set the current guild prefix to args.prefix
     await this.client.settings.set(message.guild.id, 'prefix', args.prefix)
