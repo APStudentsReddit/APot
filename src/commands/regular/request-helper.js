@@ -46,7 +46,7 @@ class RequestHelperCommand extends Command {
       const status = await message.reply(`Attempting to ping ${role.name}s!`)
 
       const prompt = await message.channel.send(`You are about to ping all ${role.name}s on this server. You will not be able to ping for another hour after confirming your helper request. Please make sure you have clearly elaborated your question and/or shown all work. If you have done so, type Y. To cancel, type N or another statement.`)
-      const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, {time: 10000})
+      const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, {time: 10000, maxMatches: 1})
       collector.on('collect', async (m) => {
         if (m.content.toLowerCase() === 'y') {
           // Make sure it is a helper role
