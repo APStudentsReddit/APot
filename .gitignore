@@ -61,3 +61,5 @@ typings/
 .next
 
 dump\.rdb
+
+data\.db
