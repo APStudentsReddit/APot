@@ -14,6 +14,7 @@ class APotClient extends AkairoClient {
       },
       commandDirectory: './src/commands/',
       inhibitorDirectory: './src/inhibitors/',
+      listenerDirectory: './src/listeners/',
       handleEdits: true,
       allowMention: true
     })
