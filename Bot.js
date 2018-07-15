@@ -1,12 +1,6 @@
-const { AkairoClient } = require('discord-akairo')
+const APot = require('./APot')
+const bot = new APot()
 
-const client = new AkairoClient({
-  ownerID: '88410718314971136',
-  prefix: '>',
-  commandDirectory: './src/commands/',
-  inhibitorDirectory: './src/inhibitors/'
-})
-
-client.login(process.env.TOKEN).then(() => {
+bot.login(process.env.TOKEN).then(() => {
   console.log('Logged in! Woo!')
 })
