@@ -67,7 +67,7 @@ class RequestHelperCommand extends Command {
         } else {
           await prompt.delete()
           await status.delete()
-          m.channel.send('Helper request aborted.').then((m) => m.delete(5000))
+          await m.channel.send('Helper request aborted.').then((m) => m.delete(5000))
         }
       })
     } else {
