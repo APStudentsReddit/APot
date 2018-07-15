@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 const moment = require('moment')
 const Discord = require('discord.js')
 
@@ -28,14 +27,15 @@ class RequestHelperCommand extends Command {
   }
 
   async exec (message, args) {
+    const lastHelperPings = await this.client.settings.get(message.guild.id, 'lastHelperPings', {})
     // Get time remaining in milliseconds by subtracting current time in milliseconds (from epoch) from the last helper ping time
-    const timePassed = Date.now() - parseInt(await redis.db.hgetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing'))
+    const timePassed = Date.now() - parseInt(lastHelperPings[message.author.id]) || 3600000
 
     // If an hour (3600000 milliseconds) has not passed since last ping, return a message giving them time remaining
-    if (timePassed < 3600000) return message.reply(`You've pinged a helper role within the last hour. Please try again ${moment().to(parseInt(await redis.db.hgetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing')) + 3600000)}`).then(msg => msg.delete(5000))
+    if (timePassed < 3600000) return message.reply(`You've pinged a helper role within the last hour. Please try again ${moment().to(parseInt(lastHelperPings[message.author.id]) + 3600000)}`).then(msg => msg.delete(5000))
 
     // Go to the mapped list of aliases and find the roleId that corresponds with the alias
-    const roleIdToPing = await redis.db.hgetAsync(`${message.guild.id}.aliasMappings`, args.helperRole.toLowerCase())
+    const roleIdToPing = await this.client.settings.get(message.guild.id, 'aliasMappings', {})[args.helperRole.toLowerCase()] || null
 
     // Convert the role id into an actual role object
     const role = message.guild.roles.get(roleIdToPing)
@@ -63,10 +63,12 @@ class RequestHelperCommand extends Command {
           await m.delete()
 
           // Mark the current time in milliseconds as the last time this person pinged a helper
-          await redis.db.hsetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing', Date.now())
+          lastHelperPings[message.author.id] = Date.now()
+          await this.client.settings.set(message.guild.id, 'lastHelperPings', lastHelperPings)
         } else {
           await prompt.delete()
           await status.delete()
+          await m.delete()
           await m.channel.send('Helper request aborted.').then((m) => m.delete(5000))
         }
       })

@@ -1,7 +1,6 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 
-class AddRoleAlias extends Command {
+class DelRoleAlias extends Command {
   constructor () {
     super('delete-role-alias', {
       aliases: ['delete-role-alias', 'del-role-alias', 'rm-role-alias', 'deleterolealias', 'deletera', 'rmra', 'delete-alias', 'rm-alias'],
@@ -52,16 +51,21 @@ class AddRoleAlias extends Command {
       // Send a status message
       const status = await message.reply(`Updating aliases for ${role.toString()}`)
 
-      // Fetch current roleAliases for this role from the database and make it parsable
-      const roleAliases = await redis.db.hgetAsync(role.id, 'aliases') || '[]'
-      let newAliasArray = JSON.parse(roleAliases)
+      // Fetch current roleAliases for this role from the database or create a temporary object if it does not exist
+      const dbRoles = await this.client.settings.get(message.guild.id, 'roles', {})
+      const dbRole = dbRoles[role.id] || { aliases: [] }
+
+      // Fetch current aliasMappings from database
+      const dbAliasMappings = await this.client.settings.get(message.guild.id, 'aliasMappings', {})
 
       // Clean out the array of any alias matching args.alias
-      newAliasArray = newAliasArray.filter(alias => alias !== args.alias.toLowerCase())
+      dbRole.aliases = dbRole.aliases.filter(alias => alias !== args.alias.toLowerCase())
+      dbRoles[role.id] = dbRole
+      delete dbAliasMappings[args.alias.toLowerCase()]
 
-      // Update the database with the cleaned array and remove it from mappings
-      await redis.db.hsetAsync(role.id, 'aliases', JSON.stringify(newAliasArray))
-      await redis.db.hdelAsync(`${message.guild.id}.aliasMappings`, args.alias)
+      // Update the database with the new data from above
+      await this.client.settings.set(message.guild.id, 'roles', dbRoles)
+      await this.client.settings.set(message.guild.id, 'aliasMappings', dbAliasMappings)
 
       // Tell the user that the role is not an alias anymore
       status.edit(`${message.author.toString()}, ${args.alias} is no longer a valid alias of ${role}`)
@@ -71,4 +75,4 @@ class AddRoleAlias extends Command {
   }
 }
 
-module.exports = AddRoleAlias
+module.exports = DelRoleAlias

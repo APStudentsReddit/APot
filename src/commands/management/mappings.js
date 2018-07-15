@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 
 class MappingsCommand extends Command {
   constructor () {
@@ -18,9 +17,8 @@ class MappingsCommand extends Command {
   async exec (message, args) {
     const status = await message.reply(`Fetching mappings...`)
 
-    let mappings = await redis.db.hgetallAsync(`${message.guild.id}.aliasMappings`)
-    let blacklist = await redis.db.hgetAsync(message.guild.id, 'blacklist')
-    blacklist = JSON.parse(blacklist) || []
+    const mappings = await this.client.settings.get(message.guild.id, 'aliasMappings', {})
+    const blacklist = await this.client.settings.get(message.guild.id, 'blacklist', [])
 
     let aliases = []
 
@@ -29,6 +27,7 @@ class MappingsCommand extends Command {
     }
 
     const embed = await this.client.util.embed()
+      .addField('Prefix', await this.client.settings.get(message.guild.id, 'prefix', '>'))
       .addField('Blacklist', blacklist.length > 0 ? blacklist.map((id) => `<@${id}>`) : 'none')
       .addField('Aliases', aliases.length > 0 ? aliases.join('\n') : 'none')
       .setFooter(`requested by ${message.author.username}`, message.author.displayAvatarURL)

@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 
 class AddRoleAlias extends Command {
   constructor () {
@@ -35,13 +34,13 @@ class AddRoleAlias extends Command {
 
     const roleId = rolesFound.first().id
 
-    const aliases = JSON.parse(await redis.db.hgetAsync(roleId, 'aliases'))
+    const roleData = (await this.client.settings.get(message.guild.id, 'roles', {}))[roleId]
 
-    if (!aliases) {
+    if (!roleData) {
       return status.edit(`${message.author.toString()}, ${rolesFound.first().toString()} has no aliases.`)
     }
 
-    status.edit(`${message.author.toString()}, The aliases for ${rolesFound.first().toString()} are: ${aliases.join(', ')}`)
+    status.edit(`${message.author.toString()}, The aliases for ${rolesFound.first().toString()} are: ${roleData.join(', ')}`)
   }
 }
 

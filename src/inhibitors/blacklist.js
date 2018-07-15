@@ -1,5 +1,4 @@
 const { Inhibitor } = require('discord-akairo')
-const redis = require('../structures/database')
 
 class BlacklistInhibitor extends Inhibitor {
   constructor () {
@@ -14,11 +13,8 @@ class BlacklistInhibitor extends Inhibitor {
     if (!message.guild) return true
     if (command.id === 'help') return false
 
-    // Get the current guild's blacklisted memebers from the Redis database
-    var blacklist = await redis.db.hgetAsync(message.guild.id, 'blacklist') || '[]'
-
-    // Make it parsable by turning it into a JSON-like structure
-    blacklist = JSON.parse(blacklist)
+    // Get the current guild's blacklisted memebers from the database
+    const blacklist = await this.client.settings.get(message.guild.id, 'blacklist', [])
 
     // Check if the member is blacklisted, if they are, tell them they were blacklisted in DMs and abort the command
     if (blacklist.includes(message.member.id)) {

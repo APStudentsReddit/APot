@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 
 class AddRoleAlias extends Command {
   constructor () {
@@ -53,17 +52,24 @@ class AddRoleAlias extends Command {
       // Send a status message
       const status = await message.reply(`Updating aliases for ${role.toString()}`)
 
-      // Fetch current roleAliases for this role from the database and make it parsable
-      let roleAliases = await redis.db.hgetAsync(role.id, 'aliases') || '[]'
-      roleAliases = JSON.parse(roleAliases)
+      // Fetch current roleAliases for this role from the database or create a temporary object if it does not exist
+      const dbRoles = await this.client.settings.get(message.guild.id, 'roles', {})
+      const dbRole = dbRoles[role.id] || { aliases: [] }
+
+      // Fetch current aliasMappings from database
+      const dbAliasMappings = await this.client.settings.get(message.guild.id, 'aliasMappings', {})
 
       // Check if this alias already exists
-      if (roleAliases.indexOf(args.alias.toLowerCase()) !== -1) return status.edit(`${message.author}, That alias already exists for ${role.toString()}`)
+      if (dbRole.aliases.indexOf(args.alias.toLowerCase()) !== -1) return status.edit(`${message.author}, That alias already exists for ${role.toString()}`)
 
       // Add the alias to the list of aliases available to that role and add it to the mappings
-      roleAliases.push(args.alias.toLowerCase())
-      await redis.db.hsetAsync(role.id, 'aliases', JSON.stringify(roleAliases))
-      await redis.db.hsetAsync(`${message.guild.id}.aliasMappings`, args.alias.toLowerCase(), role.id)
+      dbRole.aliases.push(args.alias.toLowerCase())
+      dbRoles[role.id] = dbRole
+      dbAliasMappings[args.alias.toLowerCase()] = role.id
+
+      // Update the database with the new data from above
+      await this.client.settings.set(message.guild.id, 'roles', dbRoles)
+      await this.client.settings.set(message.guild.id, 'aliasMappings', dbAliasMappings)
 
       // Tell the user that the role is now an alias
       status.edit(`${message.author.toString()}, ${args.alias} is now a valid alias of ${role}`)

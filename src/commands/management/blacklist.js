@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo')
-const redis = require('../../structures/database.js')
 
 class BlackListCommand extends Command {
   constructor () {
@@ -30,14 +29,7 @@ class BlackListCommand extends Command {
     if (args.member.permissions.has('ADMINISTRATOR')) return message.reply('You can\'t blacklist an admin. :frowning:')
 
     // Get the guild's blacklist if it exists or otherwise create it
-    var blacklist = await redis.db.hgetAsync(message.guild.id, 'blacklist')
-    if (!blacklist) {
-      await redis.db.hsetAsync(message.guild.id, 'blacklist', '[]')
-      blacklist = '[]'
-    }
-
-    // Make it parsable
-    blacklist = JSON.parse(blacklist)
+    const blacklist = await this.client.settings.get(message.guild.id, 'blacklist', [])
 
     // Check if the user is already blacklisted and assume the intent of this command is to unblacklist them
     if (blacklist.includes(args.member.id)) {
@@ -46,7 +38,7 @@ class BlackListCommand extends Command {
       blacklist.splice(index, 1)
 
       // Update the database with the new blacklist
-      await redis.db.hsetAsync(message.guild.id, 'blacklist', JSON.stringify(blacklist))
+      await this.client.settings.set(message.guild.id, 'blacklist', blacklist)
 
       // Tell the person running the command that they have been unblacklisted
       return message.reply(`${args.member} has been unblacklisted.`)
@@ -55,7 +47,7 @@ class BlackListCommand extends Command {
       blacklist.push(args.member.id)
 
       // Update the database with the new blacklist
-      await redis.db.hsetAsync(message.guild.id, 'blacklist', JSON.stringify(blacklist))
+      await this.client.settings.set(message.guild.id, 'blacklist', blacklist)
 
       // Tell the person running the command that they have been blacklisted
       return message.reply(`${args.member} has been blacklisted. <:banned:467377723799764992>`)
