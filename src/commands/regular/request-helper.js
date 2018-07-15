@@ -65,6 +65,8 @@ class RequestHelperCommand extends Command {
           // Mark the current time in milliseconds as the last time this person pinged a helper
           await redis.db.hsetAsync(`${message.guild.id}.${message.author.id}`, 'lastHelperPing', Date.now())
         } else {
+          await prompt.delete()
+          await status.delete()
           m.channel.send('Helper request aborted.').then((m) => m.delete(5000))
         }
       })
