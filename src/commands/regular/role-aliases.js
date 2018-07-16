@@ -40,7 +40,7 @@ class AddRoleAlias extends Command {
       return status.edit(`${message.author.toString()}, ${rolesFound.first().toString()} has no aliases.`)
     }
 
-    status.edit(`${message.author.toString()}, The aliases for ${rolesFound.first().toString()} are: ${roleData.join(', ')}`)
+    status.edit(`${message.author.toString()}, The aliases for ${rolesFound.first().toString()} are: ${roleData.aliases.join(', ')}`)
   }
 }
 
