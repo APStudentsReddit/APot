@@ -12,7 +12,9 @@
   "version": "1.0.0",
   "description": "A Discord bot written in Discord.js for use in the AP Students discord server",
   "main": "Bot.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "standard": "^11.0.1"
+  },
   "scripts": {
     "test": "standard"
   },
