@@ -16,8 +16,6 @@ $ yarn install
 ```bash
 $ TOKEN="ENTERYOURTOKENHERE" node Bot.js
 ```
-Make sure that the Redis server is running before issuing this command.
-
 It is wise to use a process manager such as pm2/nodemon to make sure the bot doesn't go down when you step away from the terminal.
 
 ## Usage
